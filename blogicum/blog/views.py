@@ -1,5 +1,6 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+
+from django.http import HttpResponse, Http404
 
 
 posts = [
@@ -45,19 +46,29 @@ posts = [
     },
 ]
 
+posts_dict = {post['id']: post for post in posts}
+
 
 def index(request) -> HttpResponse:
     """Отрисовка страницы с лентой постов."""
     template = 'blog/index.html'
-    context = {'posts': reversed(posts)}
+    context = {
+        'posts': reversed(posts),
+        'active_page': 'index',
+    }
     return render(request, template, context)
 
 
-def post_detail(request, id) -> HttpResponse:
+def post_detail(request, post_id) -> HttpResponse:
     """Отрисовка страницы с подробной информацией."""
     template = 'blog/detail.html'
-    context = {'post': posts[id]}
-    return render(request, template, context)
+
+    try:
+        context = {'post': posts_dict[post_id]}
+        return render(request, template, context)
+
+    except TypeError:
+        raise Http404('Пост не найден')
 
 
 def category_posts(request, category_slug) -> HttpResponse:

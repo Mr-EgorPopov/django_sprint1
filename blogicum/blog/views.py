@@ -46,7 +46,7 @@ posts = [
     },
 ]
 
-posts_dict = {post['id']: post for post in posts}
+posts_num = {post['id']: post for post in posts}
 
 
 def index(request) -> HttpResponse:
@@ -64,10 +64,9 @@ def post_detail(request, post_id) -> HttpResponse:
     template = 'blog/detail.html'
 
     try:
-        context = {'post': posts_dict[post_id]}
+        context = {'post': posts_num[post_id]}
         return render(request, template, context)
-
-    except TypeError:
+    except KeyError:
         raise Http404('Пост не найден')
 
 

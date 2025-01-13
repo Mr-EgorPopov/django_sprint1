@@ -52,10 +52,7 @@ posts_num = {post['id']: post for post in posts}
 def index(request) -> HttpResponse:
     """Отрисовка страницы с лентой постов."""
     template = 'blog/index.html'
-    context = {
-        'posts': reversed(posts),
-        'active_page': 'index',
-    }
+    context = {'posts': reversed(posts)}
     return render(request, template, context)
 
 
